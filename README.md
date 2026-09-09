@@ -29,7 +29,3 @@ CSS, JS). To use it elsewhere:
 
 - `https://<username>.github.io/<repo-name>/beam-coupling-calculator/`
 - `https://<username>.github.io/<repo-name>/photon-energy-calculator/`
-
-## License
-
-Feel free to reuse, modify, and republish — attribution appreciated but not required.
