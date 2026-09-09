@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photon Energy Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff;
+    --panel:#f7f7f8;
+    --panel-2:#ffffff;
+    --line:#e3e4e7;
+    --text:#1c1e22;
+    --text-dim:#5b5f68;
+    --text-faint:#8a8e97;
+    --accent:#5b52d6;
+    --accent-dim:#efedfc;
+    --accent-line:#cfc9f5;
+    --green:#1f9d63;
+    --green-dim:#e8f7ef;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+    padding:48px 24px 80px;
+  }
+  header{ margin-bottom:32px; }
+  .kicker{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.02em;
+    color:var(--text-faint);
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:28px;
+    font-weight:700;
+    margin:0 0 10px;
+    letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  header p{
+    color:var(--text-dim);
+    font-size:15px;
+    line-height:1.6;
+    max-width:58ch;
+    margin:0;
+  }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:8px;
+    margin-top:8px;
+  }
+  .rows{
+    display:flex;
+    flex-direction:column;
+  }
+  .row{
+    display:grid;
+    grid-template-columns: 180px 1fr 90px;
+    align-items:center;
+    gap:14px;
+    padding:14px 16px;
+    border-bottom:1px solid var(--line);
+    background:var(--panel-2);
+  }
+  .row:first-child{ border-radius:10px 10px 0 0; }
+  .row:last-child{ border-bottom:none; border-radius:0 0 10px 10px; }
+  @media (max-width:600px){
+    .row{ grid-template-columns: 1fr; gap:6px; padding:14px; }
+    .row .unit{ text-align:left; }
+  }
+
+  .row label{
+    font-size:14px;
+    font-weight:600;
+    color:var(--text);
+  }
+  .row label .sub{
+    display:block;
+    font-size:11.5px;
+    font-weight:400;
+    color:var(--text-faint);
+    margin-top:2px;
+  }
+  .row input{
+    width:100%;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px 12px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:16px;
+    font-weight:600;
+    color:var(--text);
+    outline:none;
+    transition:border-color .12s, box-shadow .12s;
+  }
+  .row input:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-dim);
+  }
+  .row .unit{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--text-faint);
+    text-align:right;
+  }
+
+  .presets{
+    margin-top:22px;
+  }
+  .presets .label{
+    font-size:12px;
+    font-family:'JetBrains Mono',monospace;
+    color:var(--text-faint);
+    margin-bottom:10px;
+  }
+  .chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .chip{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    font-weight:500;
+    color:var(--text-dim);
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:7px 13px;
+    cursor:pointer;
+    transition:border-color .12s, color .12s, background .12s;
+  }
+  .chip:hover{
+    border-color:var(--accent-line);
+    color:var(--accent);
+    background:var(--accent-dim);
+  }
+
+  footer{
+    margin-top:40px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    font-size:12.5px;
+    color:var(--text-faint);
+    line-height:1.7;
+    max-width:70ch;
+  }
+  footer strong{ color:var(--text-dim); font-weight:600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">λ · f · E · ν̃</div>
+    <h1>Photon Energy Calculator</h1>
+    <p>Enter a value in any field — wavelength, frequency, photon energy, or wavenumber — and the rest update automatically.</p>
+  </header>
+
+  <div class="panel">
+    <div class="rows">
+      <div class="row">
+        <label>Wavelength<span class="sub">in vacuum</span></label>
+        <input type="text" id="wl" value="532">
+        <div class="unit">nm</div>
+      </div>
+      <div class="row">
+        <label>Frequency</label>
+        <input type="text" id="freq" value="">
+        <div class="unit">THz</div>
+      </div>
+      <div class="row">
+        <label>Photon energy</label>
+        <input type="text" id="ev" value="">
+        <div class="unit">eV</div>
+      </div>
+      <div class="row">
+        <label>Photon energy<span class="sub">SI</span></label>
+        <input type="text" id="joule" value="">
+        <div class="unit">J (×10⁻¹⁹)</div>
+      </div>
+      <div class="row">
+        <label>Wavenumber</label>
+        <input type="text" id="wn" value="">
+        <div class="unit">cm⁻¹</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="presets">
+    <div class="label">COMMON LASER LINES</div>
+    <div class="chips">
+      <div class="chip" data-wl="405">405 nm</div>
+      <div class="chip" data-wl="450">450 nm</div>
+      <div class="chip" data-wl="488">488 nm</div>
+      <div class="chip" data-wl="532">532 nm</div>
+      <div class="chip" data-wl="633">633 nm</div>
+      <div class="chip" data-wl="780">780 nm</div>
+      <div class="chip" data-wl="800">800 nm (Ti:Sapph)</div>
+      <div class="chip" data-wl="1064">1064 nm</div>
+      <div class="chip" data-wl="1550">1550 nm</div>
+    </div>
+  </div>
+
+  <footer>
+    <strong>Method.</strong> E = hc/λ, f = c/λ, ν̃ = 1/λ. Using h = 4.135667696×10⁻¹⁵ eV·s,
+    c = 2.99792458×10⁸ m/s. Vacuum wavelength is assumed throughout — for wavelength in a medium
+    (e.g. air, glass, fiber), divide by the refractive index before converting.
+  </footer>
+
+</div>
+
+<script>
+  const h_eVs = 4.135667696e-15; // eV*s
+  const c = 2.99792458e8; // m/s
+  const h_Js = 6.62607015e-34; // J*s
+
+  const wlEl = document.getElementById('wl');
+  const freqEl = document.getElementById('freq');
+  const evEl = document.getElementById('ev');
+  const jEl = document.getElementById('joule');
+  const wnEl = document.getElementById('wn');
+
+  function fromWavelengthNm(wlNm){
+    const wlM = wlNm*1e-9;
+    const freqHz = c/wlM;
+    const freqTHz = freqHz/1e12;
+    const energyEv = h_eVs*freqHz;
+    const energyJ = h_Js*freqHz;
+    const wn = 1e7/wlNm; // cm^-1
+    return {freqTHz, energyEv, energyJ, wn};
+  }
+
+  function setAllFrom(wlNm, skip){
+    if(!isFinite(wlNm) || wlNm<=0) return;
+    const r = fromWavelengthNm(wlNm);
+    if(skip!==wlEl)   wlEl.value = trim(wlNm, 4);
+    if(skip!==freqEl) freqEl.value = trim(r.freqTHz, 5);
+    if(skip!==evEl)   evEl.value = trim(r.energyEv, 5);
+    if(skip!==jEl)    jEl.value = trim(r.energyJ*1e19, 5);
+    if(skip!==wnEl)   wnEl.value = trim(r.wn, 5);
+  }
+
+  function trim(n, sig){
+    if(!isFinite(n)) return '';
+    if(n===0) return '0';
+    const d = Math.max(0, sig - Math.ceil(Math.log10(Math.abs(n))));
+    return parseFloat(n.toFixed(Math.min(d,10))).toString();
+  }
+
+  wlEl.addEventListener('input', ()=>{
+    const v = parseFloat(wlEl.value);
+    setAllFrom(v, wlEl);
+  });
+  freqEl.addEventListener('input', ()=>{
+    const fTHz = parseFloat(freqEl.value);
+    if(!isFinite(fTHz)||fTHz<=0) return;
+    const wlNm = (c/(fTHz*1e12))*1e9;
+    setAllFrom(wlNm, freqEl);
+  });
+  evEl.addEventListener('input', ()=>{
+    const ev = parseFloat(evEl.value);
+    if(!isFinite(ev)||ev<=0) return;
+    const wlNm = (h_eVs*c/ev)*1e9;
+    setAllFrom(wlNm, evEl);
+  });
+  jEl.addEventListener('input', ()=>{
+    const jScaled = parseFloat(jEl.value);
+    if(!isFinite(jScaled)||jScaled<=0) return;
+    const jTrue = jScaled*1e-19;
+    const wlNm = (h_Js*c/jTrue)*1e9;
+    setAllFrom(wlNm, jEl);
+  });
+  wnEl.addEventListener('input', ()=>{
+    const wn = parseFloat(wnEl.value);
+    if(!isFinite(wn)||wn<=0) return;
+    const wlNm = 1e7/wn;
+    setAllFrom(wlNm, wnEl);
+  });
+
+  document.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      setAllFrom(parseFloat(chip.dataset.wl), null);
+    });
+  });
+
+  setAllFrom(532, null);
+</script>
+</body>
+</html>

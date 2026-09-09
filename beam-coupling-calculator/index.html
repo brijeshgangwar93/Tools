@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beam Coupling Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff;
+    --panel:#f7f7f8;
+    --panel-2:#ffffff;
+    --line:#e3e4e7;
+    --text:#1c1e22;
+    --text-dim:#5b5f68;
+    --text-faint:#8a8e97;
+    --accent:#5b52d6;
+    --accent-dim:#efedfc;
+    --accent-line:#cfc9f5;
+    --green:#1f9d63;
+    --green-dim:#e8f7ef;
+    --amber:#b9760b;
+    --amber-dim:#fdf1de;
+    --red:#c23a41;
+    --red-dim:#fbe9ea;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:48px 24px 84px;
+  }
+  header{ margin-bottom:32px; }
+  .kicker{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.02em;
+    color:var(--text-faint);
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:28px;
+    font-weight:700;
+    margin:0 0 10px;
+    letter-spacing:-0.01em;
+  }
+  header p{
+    color:var(--text-dim);
+    font-size:15px;
+    line-height:1.6;
+    max-width:58ch;
+    margin:0;
+  }
+
+  .tabs{
+    display:flex;
+    gap:2px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:3px;
+    margin:30px 0 22px;
+    width:fit-content;
+  }
+  .tab{
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text-dim);
+    background:transparent;
+    border:none;
+    padding:9px 18px;
+    border-radius:7px;
+    cursor:pointer;
+    transition:background .15s, color .15s, box-shadow .15s;
+  }
+  .tab.active{
+    background:var(--panel-2);
+    color:var(--text);
+    box-shadow:0 1px 2px rgba(0,0,0,0.06);
+  }
+  .mode{display:none;}
+  .mode.active{display:block;}
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:20px;
+  }
+  @media (max-width:720px){ .grid{grid-template-columns:1fr;} }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:24px 24px 20px;
+  }
+  .panel h2{
+    font-size:12px;
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:0.03em;
+    color:var(--text-faint);
+    margin:0 0 18px;
+  }
+  .field{margin-bottom:16px;}
+  .field:last-child{margin-bottom:0;}
+  .field label{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--text);
+    margin-bottom:7px;
+  }
+  .field label .hint{
+    font-size:11.5px;
+    font-weight:400;
+    color:var(--text-faint);
+  }
+  .inputrow{
+    display:flex;
+    align-items:center;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    transition:border-color .12s, box-shadow .12s;
+  }
+  .inputrow input{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:var(--text);
+    font-family:'JetBrains Mono',monospace;
+    font-size:15px;
+    font-weight:600;
+    padding:10px 12px;
+    width:100%;
+  }
+  .inputrow .unit{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    color:var(--text-faint);
+    padding:0 12px;
+    border-left:1px solid var(--line);
+    white-space:nowrap;
+  }
+  .inputrow:focus-within{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
+  .m2 .inputrow:focus-within{ border-color:var(--green); box-shadow:0 0 0 3px var(--green-dim); }
+
+  .readout{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:24px;
+  }
+  .readout h2{
+    font-size:12px;
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:0.03em;
+    color:var(--text-faint);
+    margin:0 0 18px;
+  }
+  .stat{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:11px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .stat:last-of-type{border-bottom:none;}
+  .stat .k{font-size:13.5px;color:var(--text-dim);}
+  .stat .v{
+    font-family:'JetBrains Mono',monospace;
+    font-size:16px;
+    font-weight:700;
+    color:var(--text);
+  }
+  .stat .v .sub{
+    font-size:12px;
+    color:var(--text-faint);
+    font-weight:400;
+    margin-left:4px;
+  }
+
+  .verdict{
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:10px;
+    font-size:13.5px;
+    line-height:1.55;
+    border:1px solid;
+  }
+  .verdict.good{ background:var(--green-dim); border-color:#bfe8d3; color:#146942;}
+  .verdict.warn{ background:var(--amber-dim); border-color:#f2dcb0; color:#8a5c07;}
+  .verdict.bad{ background:var(--red-dim); border-color:#f2c6c8; color:#8f2a30;}
+  .verdict .tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.03em;
+    display:block;
+    margin-bottom:5px;
+    opacity:0.85;
+  }
+
+  .diagram{
+    margin-top:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px 10px 10px;
+  }
+
+  footer{
+    margin-top:44px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    font-size:12.5px;
+    color:var(--text-faint);
+    line-height:1.7;
+    max-width:70ch;
+  }
+  footer strong{color:var(--text-dim); font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">FREE-SPACE ↔ FIBER · GAUSSIAN OPTICS</div>
+    <h1>Beam Coupling Calculator</h1>
+    <p>Focused spot size, effective NA, and mode-match quality for free-space-to-fiber coupling and 4f pinhole spatial filtering, from paraxial Gaussian beam optics.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-mode="fiber">Fiber coupling</button>
+    <button class="tab" data-mode="pinhole">Pinhole spatial filter</button>
+  </div>
+
+  <!-- FIBER COUPLING MODE -->
+  <div class="mode active" id="mode-fiber">
+    <div class="grid">
+      <div class="panel">
+        <h2>INPUTS</h2>
+        <div class="field">
+          <label>Wavelength <span class="hint">λ</span></label>
+          <div class="inputrow"><input type="number" id="f_lambda" value="532" step="1"><span class="unit">nm</span></div>
+        </div>
+        <div class="field">
+          <label>Incoming collimated beam diameter <span class="hint">1/e² diameter</span></label>
+          <div class="inputrow"><input type="number" id="f_beam" value="0.8" step="0.01"><span class="unit">mm</span></div>
+        </div>
+        <div class="field">
+          <label>Focusing lens / objective focal length</label>
+          <div class="inputrow"><input type="number" id="f_focal" value="5" step="0.1"><span class="unit">mm</span></div>
+        </div>
+        <div class="field">
+          <label>Fiber mode field diameter <span class="hint">optional</span></label>
+          <div class="inputrow"><input type="number" id="f_mfd" value="4.5" step="0.1"><span class="unit">µm</span></div>
+        </div>
+        <div class="field">
+          <label>Fiber NA <span class="hint">optional</span></label>
+          <div class="inputrow"><input type="number" id="f_na" value="0.12" step="0.01"><span class="unit">NA</span></div>
+        </div>
+      </div>
+
+      <div class="readout">
+        <h2>RESULT</h2>
+        <div class="stat"><span class="k">Focused spot diameter</span><span class="v" id="f_spot">—</span></div>
+        <div class="stat"><span class="k">Effective focusing NA</span><span class="v" id="f_naeff">—</span></div>
+        <div class="stat"><span class="k">Spot ÷ MFD</span><span class="v" id="f_ratio">—</span></div>
+        <div id="f_verdict"></div>
+        <div class="diagram"><svg id="f_svg" width="260" height="130"></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PINHOLE SPATIAL FILTER MODE -->
+  <div class="mode" id="mode-pinhole">
+    <div class="grid">
+      <div class="panel m2">
+        <h2>INPUTS</h2>
+        <div class="field">
+          <label>Wavelength <span class="hint">λ</span></label>
+          <div class="inputrow"><input type="number" id="p_lambda" value="405" step="1"><span class="unit">nm</span></div>
+        </div>
+        <div class="field">
+          <label>Incoming collimated beam diameter</label>
+          <div class="inputrow"><input type="number" id="p_beam" value="0.8" step="0.01"><span class="unit">mm</span></div>
+        </div>
+        <div class="field">
+          <label>Lens 1 focal length <span class="hint">focusing lens</span></label>
+          <div class="inputrow"><input type="number" id="p_f1" value="5" step="0.1"><span class="unit">mm</span></div>
+        </div>
+        <div class="field">
+          <label>Pinhole diameter</label>
+          <div class="inputrow"><input type="number" id="p_pin" value="10" step="0.5"><span class="unit">µm</span></div>
+        </div>
+        <div class="field">
+          <label>Lens 2 focal length <span class="hint">recollimating, optional</span></label>
+          <div class="inputrow"><input type="number" id="p_f2" value="" step="0.1" placeholder="e.g. 5"><span class="unit">mm</span></div>
+        </div>
+      </div>
+
+      <div class="readout">
+        <h2>RESULT</h2>
+        <div class="stat"><span class="k">Spot diameter at pinhole</span><span class="v" id="p_spot">—</span></div>
+        <div class="stat"><span class="k">Pinhole ÷ spot ratio</span><span class="v" id="p_ratio">—</span></div>
+        <div class="stat"><span class="k">Ideal pinhole for this spot</span><span class="v" id="p_ideal">—</span></div>
+        <div class="stat"><span class="k">Output beam diameter</span><span class="v" id="p_out">—</span></div>
+        <div id="p_verdict"></div>
+        <div class="diagram"><svg id="p_svg" width="260" height="130"></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <strong>Method.</strong> Paraxial Gaussian beam focusing: focused 1/e² radius
+    w<sub>f</sub> = λf / (π·w<sub>in</sub>), effective NA = w<sub>in</sub>/f. Pinhole sizing follows
+    the standard spatial-filter rule of thumb — a pinhole 1.3–1.6× the focused spot diameter passes
+    ≈99% of the fundamental mode while rejecting higher-order content; smaller clips the fundamental
+    mode itself, larger filters weakly. These are estimates for ideal Gaussian, diffraction-limited
+    beams — real beam quality (M²), lens aberration, and alignment will reduce actual throughput below
+    the geometric numbers shown here.
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.mode').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById('mode-'+t.dataset.mode).classList.add('active');
+    });
+  });
+
+  function fmt(n, digits){
+    if(!isFinite(n)) return '—';
+    return n.toFixed(digits);
+  }
+
+  function drawSpotDiagram(svgId, spotUm, refUm, refLabel, color){
+    const svg = document.getElementById(svgId);
+    svg.innerHTML = '';
+    const w=260,h=130,cx=w/2,cy=h/2+6;
+    const maxR = 46;
+    const scaleRef = Math.max(spotUm, refUm||spotUm, 0.01);
+    const scale = maxR/scaleRef;
+    const rSpot = Math.max(2, spotUm*scale/2);
+    const ns='http://www.w3.org/2000/svg';
+
+    function circle(r, stroke, fill, dash){
+      const c=document.createElementNS(ns,'circle');
+      c.setAttribute('cx',cx); c.setAttribute('cy',cy); c.setAttribute('r',r);
+      c.setAttribute('stroke',stroke); c.setAttribute('fill',fill);
+      c.setAttribute('stroke-width','1.6');
+      if(dash) c.setAttribute('stroke-dasharray',dash);
+      svg.appendChild(c);
+    }
+    function label(x,y,text,fill,anchor){
+      const t=document.createElementNS(ns,'text');
+      t.setAttribute('x',x); t.setAttribute('y',y);
+      t.setAttribute('fill',fill); t.setAttribute('font-size','11');
+      t.setAttribute('font-family',"'JetBrains Mono',monospace");
+      t.setAttribute('text-anchor',anchor||'middle');
+      t.textContent = text;
+      svg.appendChild(t);
+    }
+
+    if(refUm){
+      const rRef = Math.max(2, refUm*scale/2);
+      circle(rRef, 'rgba(28,30,34,0.28)', 'none', '3,3');
+      label(cx, cy+rRef+16, refLabel, 'rgba(28,30,34,0.45)');
+    }
+    circle(rSpot, color, color+'26', null);
+    label(cx, cy - Math.max(rSpot,10) - 10, 'focused spot', color);
+  }
+
+  // ---- FIBER MODE ----
+  function calcFiber(){
+    const lambda = parseFloat(document.getElementById('f_lambda').value)/1000;
+    const beam = parseFloat(document.getElementById('f_beam').value)*1000;
+    const focal = parseFloat(document.getElementById('f_focal').value)*1000;
+    const mfd = parseFloat(document.getElementById('f_mfd').value);
+    const fiberNA = parseFloat(document.getElementById('f_na').value);
+
+    if(!lambda || !beam || !focal){ return; }
+    const w_in = beam/2;
+    const w_focus = (lambda*focal)/(Math.PI*w_in);
+    const spotDia = 2*w_focus;
+    const naEff = w_in/focal;
+
+    document.getElementById('f_spot').innerHTML = fmt(spotDia,2)+' <span class="sub">µm</span>';
+
+    let naNote = '';
+    if(fiberNA){
+      naNote = naEff <= fiberNA ? ' (within fiber acceptance)' : ' (exceeds fiber NA — overfilling)';
+    }
+    document.getElementById('f_naeff').innerHTML = fmt(naEff,3)+`<span class="sub">${naNote}</span>`;
+
+    let verdictEl = document.getElementById('f_verdict');
+    let ratioEl = document.getElementById('f_ratio');
+
+    if(mfd){
+      const ratio = spotDia/mfd;
+      ratioEl.textContent = fmt(ratio,2)+'×';
+      let cls='good', tag='GOOD MATCH', msg='Focused spot is close to the fiber mode field diameter — expect good coupling efficiency with careful alignment.';
+      if(ratio > 1.5){ cls='bad'; tag='OVERSIZED'; msg='Focused spot is significantly larger than the fiber MFD. Much of the light will miss the guided mode — use a shorter focal length or a larger input beam.'; }
+      else if(ratio > 1.15){ cls='warn'; tag='SLIGHTLY OVERSIZED'; msg='Spot is somewhat larger than the MFD — coupling will work but efficiency will be reduced. A shorter focal length would tighten the match.'; }
+      else if(ratio < 0.6){ cls='bad'; tag='UNDERSIZED'; msg='Focused spot is much smaller than the fiber MFD — you are strongly underfilling the mode, which also costs efficiency.'; }
+      else if(ratio < 0.85){ cls='warn'; tag='SLIGHTLY UNDERSIZED'; msg='Spot is a bit smaller than the MFD. This is usually fairly forgiving — mild underfilling costs less efficiency than overfilling.'; }
+      verdictEl.innerHTML = `<div class="verdict ${cls}"><span class="tag">${tag}</span>${msg}</div>`;
+    } else {
+      ratioEl.textContent = '—';
+      verdictEl.innerHTML = '';
+    }
+
+    drawSpotDiagram('f_svg', spotDia, mfd||null, 'MFD '+fmt(mfd,1)+'µm', '#5b52d6');
+  }
+
+  // ---- PINHOLE MODE ----
+  function calcPinhole(){
+    const lambda = parseFloat(document.getElementById('p_lambda').value)/1000;
+    const beam = parseFloat(document.getElementById('p_beam').value)*1000;
+    const f1 = parseFloat(document.getElementById('p_f1').value)*1000;
+    const pin = parseFloat(document.getElementById('p_pin').value);
+    const f2raw = document.getElementById('p_f2').value;
+    const f2 = f2raw ? parseFloat(f2raw)*1000 : null;
+
+    if(!lambda || !beam || !f1){ return; }
+    const w_in = beam/2;
+    const w_focus = (lambda*f1)/(Math.PI*w_in);
+    const spotDia = 2*w_focus;
+    const idealPin = spotDia*1.4;
+
+    document.getElementById('p_spot').innerHTML = fmt(spotDia,2)+' <span class="sub">µm</span>';
+    document.getElementById('p_ideal').innerHTML = fmt(idealPin,1)+' <span class="sub">µm (≈1.4× spot)</span>';
+
+    if(f2){
+      const mag = f2/f1;
+      const outDia = (beam/1000)*mag;
+      document.getElementById('p_out').innerHTML = fmt(outDia,2)+' <span class="sub">mm</span>';
+    } else {
+      document.getElementById('p_out').innerHTML = '—';
+    }
+
+    let ratioEl = document.getElementById('p_ratio');
+    let verdictEl = document.getElementById('p_verdict');
+
+    if(pin){
+      const ratio = pin/spotDia;
+      ratioEl.textContent = fmt(ratio,2)+'×';
+      let cls='good', tag='GOOD FILTERING', msg='Pinhole is close to the ideal 1.3–1.6× the spot diameter — passes most of the fundamental mode while rejecting higher-order content.';
+      if(ratio < 1.0){ cls='bad'; tag='TOO TIGHT'; msg='Pinhole is smaller than the focused spot — it will clip the fundamental Gaussian mode itself, causing high power loss, not just filtering. Use a shorter focal length or a larger pinhole.'; }
+      else if(ratio < 1.2){ cls='warn'; tag='TIGHT'; msg='Pinhole is close to the spot size — some fundamental-mode loss is likely. Workable, but a slightly larger pinhole or shorter focal length would help.'; }
+      else if(ratio > 2.5){ cls='bad'; tag='TOO LOOSE'; msg='Pinhole is much larger than the spot — most higher-order/aberrated content will pass through, giving weak spatial filtering.'; }
+      else if(ratio > 1.6){ cls='warn'; tag='LOOSE'; msg='Pinhole is somewhat larger than ideal — good throughput but filtering is milder than optimal.'; }
+      verdictEl.innerHTML = `<div class="verdict ${cls}"><span class="tag">${tag}</span>${msg}</div>`;
+    } else {
+      ratioEl.textContent = '—';
+      verdictEl.innerHTML = '';
+    }
+
+    drawSpotDiagram('p_svg', spotDia, pin||null, 'pinhole '+fmt(pin,1)+'µm', '#1f9d63');
+  }
+
+  document.querySelectorAll('#mode-fiber input').forEach(el=>el.addEventListener('input', calcFiber));
+  document.querySelectorAll('#mode-pinhole input').forEach(el=>el.addEventListener('input', calcPinhole));
+
+  calcFiber();
+  calcPinhole();
+</script>
+</body>
+</html>
