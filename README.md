@@ -14,5 +14,5 @@ single `index.html` file.
 
 ## Live pages (this repo, once Pages is enabled)
 
-- `[https://<username>.github.io/<repo-name>/beam-coupling-calculator/](https://brijeshgangwar93.github.io/Tools/beam-coupling-calculator/)`
-- `[https://<username>.github.io/<repo-name>/photon-energy-calculator/](https://brijeshgangwar93.github.io/Tools/photon-energy-calculator/)`
+- `https://brijeshgangwar93.github.io/Tools/beam-coupling-calculator/`
+- `https://brijeshgangwar93.github.io/Tools/photon-energy-calculator/`
