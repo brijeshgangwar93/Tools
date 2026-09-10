@@ -12,20 +12,7 @@ single `index.html` file.
 - **[Photon Energy Calculator](./photon-energy-calculator/)** — converts
   between wavelength, frequency, photon energy (eV / J), and wavenumber.
 
-## Using a calculator on your own site
-
-Each folder contains one `index.html` file with everything inline (HTML,
-CSS, JS). To use it elsewhere:
-
-1. Download the `index.html` file from the tool's folder.
-2. **Google Sites:** Insert → Embed → Embed code → paste the file's contents.
-3. **Any other site / CMS:** upload the file and link to it, or paste its
-   contents into an iframe/embed block.
-4. **GitHub Pages:** fork or clone this repo, enable Pages in
-   Settings → Pages, and each tool will be live at
-   `https://<your-username>.github.io/<repo-name>/<tool-folder>/`.
-
 ## Live pages (this repo, once Pages is enabled)
 
-- `https://<username>.github.io/<repo-name>/beam-coupling-calculator/`
-- `https://<username>.github.io/<repo-name>/photon-energy-calculator/`
+- `[https://<username>.github.io/<repo-name>/beam-coupling-calculator/](https://brijeshgangwar93.github.io/Tools/beam-coupling-calculator/)`
+- `[https://<username>.github.io/<repo-name>/photon-energy-calculator/](https://brijeshgangwar93.github.io/Tools/photon-energy-calculator/)`
