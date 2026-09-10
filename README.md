@@ -12,7 +12,7 @@ single `index.html` file.
 - **[Photon Energy Calculator](./photon-energy-calculator/)** — converts
   between wavelength, frequency, photon energy (eV / J), and wavenumber.
 
-## Live pages (this repo, once Pages is enabled)
+## Live pages
 
 - `https://brijeshgangwar93.github.io/Tools/beam-coupling-calculator/`
 - `https://brijeshgangwar93.github.io/Tools/photon-energy-calculator/`
