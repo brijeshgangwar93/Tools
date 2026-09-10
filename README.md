@@ -12,7 +12,7 @@ single `index.html` file.
   - ***[Spectrometer Signal Coupling](./Spectrometer-Signal-Coupling/)*** — back-aperture
     beam diameter from your objective, and the coupling lens focal length that matches your
     spectrometer's f-number, so the grating is neither over- nor underfilled.
-- **[Photon Energy Calculator](./photon-energy-calculator/)** — converts
+-**[Photon Energy Calculator](./photon-energy-calculator/)** — converts
   between wavelength, frequency, photon energy (eV / J), and wavenumber.
 
 ## Live pages
