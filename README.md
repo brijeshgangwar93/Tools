@@ -6,7 +6,7 @@ single `index.html` file.
 
 ## Tools
 - **[Experimental Setup Building tool](./Experimental-Setup-Building-tool/)** - These tool can help to choose the components like lens and objective as per requirment during experimental setup building
-  - ***[Beam Coupling Calculator](./Experimental-Setup-Building-tool/beam-coupling/)*** — focused spot
+  - ***[Beam Coupling Calculator](./Experimental-Setup-Building-tool/Beam-Coupling/)*** — focused spot
     size, effective NA, and mode-match quality for free-space-to-fiber coupling
     and 4f pinhole spatial filtering (paraxial Gaussian beam optics).
   - ***[Spectrometer Signal Coupling](./Experimental-Setup-Building-tool/Spectrometer-Signal-Coupling/)*** — back-aperture
